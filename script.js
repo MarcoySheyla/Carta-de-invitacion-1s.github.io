@@ -1,10 +1,8 @@
 const container = document.getElementById("container");
 const flash = document.getElementById("flash");
-const music = document.getElementById("music");
 
 let started = false;
 
-music.volume = 0.4;
 
 container.addEventListener("click", () => {
   if (started) return;
@@ -14,16 +12,15 @@ container.addEventListener("click", () => {
   container.offsetHeight; // 🔥 fuerza reflow (clave)
   container.classList.add("open");
 
-  // música
-  music?.play().catch(() => {});
 
-  // flash antes del final
-  setTimeout(() => {
-    flash.classList.add("active");
-  }, 3500);
+// flash cerca del final (1.4s)
+setTimeout(() => {
+  flash.classList.add("active");
+}, 1400);
 
-  // cambio de página final (5s total)
-  setTimeout(() => {
-    window.location.href = "pagina2.html";
-  }, 5000);
+// cambio de página exactamente a los 2s
+setTimeout(() => {
+  window.location.href = "pagina2.html";
+}, 2000);
+
 });

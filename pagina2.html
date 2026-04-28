@@ -1,49 +1,57 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestra Boda</title>
 
-<title>Nuestra Boda</title>
+  <link rel="stylesheet" href="pagina2.css">
 
-<link rel="stylesheet" href="pagina2.css">
-
-<!-- FUENTES -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Great+Vibes&family=Libre+Baskerville&family=Cormorant+Garamond&display=swap" rel="stylesheet">
-
+  <!-- FUENTES -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Great+Vibes&family=Libre+Baskerville&family=Cormorant+Garamond&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<!-- BLOQUE 1 -->
-<section class="hero">
+  <!-- AUDIO -->
+  <audio id="music" loop>
+    <source src="melodia.mp3" type="audio/mpeg">
+  </audio>
 
-  <div class="hero-bg"></div>
-  <div class="hero-overlay"></div>
+  <!-- HERO -->
+  <section class="hero">
 
-  <!-- CONTENIDO -->
-  <div class="contenido-boda">
+    <!-- CAPA 1: FONDO -->
+    <div class="hero-bg"></div>
 
-    <p class="pre">NOS CASAMOS</p>
+    <!-- CAPA 2: VIDEO -->
+    <div class="butterfly-video-container">
+      <video id="butterflyVideo" autoplay loop muted playsinline preload="auto">
+        <source src="img/butterflies.mp4" type="video/mp4">
+      </video>
+    </div>
 
-    <h1 class="nombres">
-      <span class="nombre">Marco</span>
-      <span class="amp">&</span>
-      <span class="nombre">Sheyla</span>
-    </h1>
+    <!-- CAPA 3: OVERLAY -->
+    <div class="hero-overlay"></div>
 
-    <p class="fecha">01 de Agosto de 2026</p>
+    <!-- CAPA 4: CONTENIDO -->
+    <div class="contenido-boda">
+      <p class="pre">NOS CASAMOS</p>
 
-    <p class="confirmar">CONFIRMA TU ASISTENCIA</p>
+      <h1 class="nombres">
+        <span class="nombre">Marco</span>
+        <span class="amp">&</span>
+        <span class="nombre">Sheyla</span>
+      </h1>
 
-  </div>
+      <p class="fecha">01 de Agosto de 2026</p>
+      <p class="confirmar">CONFIRMA TU ASISTENCIA</p>
+    </div>
 
-  <!-- FLECHA -->
-  <div class="scroll-indicator">⌄</div>
+    <div class="scroll-indicator">⌄</div>
 
-</section>
+  </section>
 
-<script src="pagina2.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>

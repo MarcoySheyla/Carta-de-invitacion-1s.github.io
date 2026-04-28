@@ -1,4 +1,16 @@
-// preparado para futuras animaciones
 window.addEventListener("load", () => {
-  document.body.style.opacity = "1";
+
+  // Música
+  const music = document.getElementById("music");
+  if (music) {
+    music.volume = 0.35;
+    music.play().catch(() => {});
+  }
+
+  // Video
+  const video = document.getElementById("butterflyVideo");
+  if (video) {
+    video.play().catch(() => {});
+  }
+
 });
