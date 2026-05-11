@@ -1,26 +1,85 @@
-/* RESET */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+/* =========================================================
+   00) RESET + BASE
+   ========================================================= */
+*{ margin:0; padding:0; box-sizing:border-box; }
 
 html, body{
   width:100%;
   height:100%;
+  background:#7A8450;
 }
 
 body{
   font-family:'Playfair Display', serif;
-  background:#f5f1ea;
+  background:#7A8450;
   overflow-x:hidden;
+  color:#fff;
 }
 
-/* HERO */
+/* =========================================================
+   01) VARIABLES (EDITA AQUÍ PARA CAMBIAR TODO FÁCIL)
+   - Cambia fuentes, tamaños, espacios y colores sin romper nada
+   ========================================================= */
+:root{
+  /* Colores */
+  --bg: #7A8450;
+  --white: #ffffff;
+  --soft: #e3e8d6;
+  --ink: #111;
+
+  /* Fuentes */
+  --font-main: 'Playfair Display', serif;
+  --font-serif: 'Libre Baskerville', serif;
+  --font-script: 'Great Vibes', cursive;
+  --font-alt: 'Cormorant Garamond', serif;
+
+  /* Sombras / radios */
+  --shadow-card: 0 10px 25px rgba(0,0,0,0.15), inset 0 0 10px rgba(255,255,255,0.05);
+  --shadow-fab: 0 10px 25px rgba(0,0,0,0.18);
+  --radius-panel: 36px;
+  --radius-card: 20px;
+
+  /* Espaciados generales */
+  --section-pad: clamp(24px, 5vw, 48px);
+
+  /* CUENTA ATRÁS (PC por defecto) */
+  --cd-panel-pad-y: clamp(48px, 8vw, 96px);
+  --cd-panel-pad-x: clamp(24px, 5vw, 52px);
+
+  --cd-grid-gap: clamp(20px, 3.5vw, 40px);
+  --cd-item-gap: 18px;
+  --cd-item-minw: 84px;
+
+  --cd-number-font: var(--font-serif);      /* cámbialo si quieres: var(--font-main) o var(--font-alt) */
+  --cd-number-size: clamp(38px, 6vw, 60px);
+  --cd-number-weight: 400;
+  --cd-number-letter: -0.02em;
+  --cd-number-shadow: none;
+
+  --cd-label-font: var(--font-serif);
+  --cd-label-size: clamp(11px, 2vw, 14px);
+  --cd-label-letter: 0.22em;
+
+  --cd-title-font: var(--font-script);
+  --cd-title-size: clamp(56px, 10vw, 96px);
+
+  --cd-text-font: var(--font-serif);
+  --cd-text-size: clamp(10px, 2.2vw, 16px);
+
+  /* Dos puntos “:” (PC) */
+  --cd-colon-size: clamp(36px, 6vw, 54px);
+  --cd-colon-right: -18px;
+  --cd-colon-opacity: 0.5;
+}
+
+/* =========================================================
+   02) HERO (VIDEO + OVERLAY + TEXTOS)
+   ========================================================= */
 .hero{
   position:relative;
   width:100%;
-  height:100vh;
+  min-height:100vh;
+  height:100dvh;
   overflow:hidden;
   display:flex;
   justify-content:center;
@@ -28,55 +87,48 @@ body{
   text-align:center;
 }
 
-/* CAPA 1: FONDO */
-.hero-bg{
+/* VIDEO DE FONDO */
+.hero-bg-video{
   position:absolute;
   inset:0;
-  background:url("fondo.jpg") center/cover no-repeat;
+  width:100%;
+  height:100%;
   z-index:1;
 }
 
-/* CAPA 2: VIDEO */
-.butterfly-video-container{
-  position:absolute;
-  inset:0;
-  z-index:2;
-  pointer-events:none;
-}
-
-#butterflyVideo{
+.hero-bg-video video{
   width:100%;
   height:100%;
   object-fit:cover;
-  opacity:0.85;
-  filter:brightness(1.05) contrast(1.1);
+  filter:brightness(0.9);
 }
 
-/* CAPA 3: OVERLAY */
+/* OVERLAY */
 .hero-overlay{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,0.06);
+  background:rgba(0,0,0,0.08);
   z-index:3;
 }
 
-/* CAPA 4: CONTENIDO */
+/* CONTENIDO HERO */
 .contenido-boda{
   position:relative;
   z-index:4;
-  color:white;
+  color:var(--white);
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:32px;
-  padding:24px;
-  text-shadow:0 0 8px rgba(255,255,255,0.4);
+  gap:clamp(16px,4vw,32px);
+  padding:clamp(16px,5vw,32px);
+  text-shadow:0 0 8px rgba(255,255,255,0.35);
 }
 
+/* TEXTOS HERO */
 .pre{
-  font-family:'Libre Baskerville', serif;
-  font-size:clamp(14px,2.8vw,24px);
-  letter-spacing:0.6em;
+  font-family:var(--font-serif);
+  font-size:clamp(12px,3vw,22px);
+  letter-spacing:clamp(0.2em,2vw,0.6em);
 }
 
 .nombres{
@@ -86,41 +138,559 @@ body{
 }
 
 .nombre{
-  font-family:'Great Vibes', serif;
-  font-size:clamp(55px,12vw,130px);
+  font-family:var(--font-script);
+  font-size:clamp(48px,14vw,130px);
+  line-height:1;
 }
 
 .amp{
-  font-family:'Cormorant Garamond', serif;
-  font-size:clamp(28px,5vw,48px);
+  font-family:var(--font-alt);
+  font-size:clamp(24px,6vw,48px);
 }
 
 .fecha{
-  font-family:'Great Vibes', cursive;
-  font-size:clamp(22px,3.8vw,32px);
-  letter-spacing:0.3em;
+  font-family:var(--font-script);
+  font-size:clamp(20px,4vw,32px);
+  letter-spacing:clamp(0.1em,1vw,0.3em);
 }
 
 .confirmar{
-  font-family:'Libre Baskerville', serif;
-  font-size:clamp(10px,2vw,14px);
-  letter-spacing:0.3em;
+  font-family:var(--font-serif);
+  font-size:clamp(10px,2.5vw,14px);
+  letter-spacing:clamp(0.15em,1vw,0.3em);
 }
 
-/* FLECHA */
-.scroll-indicator{
-  position:absolute;
-  bottom:30px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:38px;
-  color:white;
-  z-index:4;
-  animation:floatArrow 1.5s ease-in-out infinite;
+/* =========================================================
+   03) BOTÓN AUDIO (Floating)
+   ========================================================= */
+.audio-toggle {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  padding: 0.85rem 1.15rem;
+  font-size: 0.95rem;
+  font-family: var(--font-serif);
+  cursor: pointer;
+  box-shadow: var(--shadow-fab);
+  transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+  backdrop-filter: blur(12px);
 }
 
-@keyframes floatArrow{
-  0%{transform:translate(-50%,0);}
-  50%{transform:translate(-50%,12px);}
-  100%{transform:translate(-50%,0);}
+.audio-toggle:hover,
+.audio-toggle:focus-visible {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 1);
+  outline: none;
+}
+
+.audio-toggle.playing {
+  color: #0d5820;
+  border-color: #1d7a2d;
+}
+
+/* =========================================================
+   04) CUENTA ATRÁS
+   ========================================================= */
+.countdown-section {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  padding: var(--section-pad);
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* decoraciones suaves */
+.countdown-section::before {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  width: 420px;
+  height: 420px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at top center, rgba(122, 132, 80, 0.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.countdown-section::after {
+  content: "";
+  position: absolute;
+  bottom: 8%;
+  right: 10%;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle at bottom right, rgba(122, 132, 80, 0.06) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.countdown-panel {
+  width: 100%;
+  max-width: 1080px;
+  padding: var(--cd-panel-pad-y) var(--cd-panel-pad-x);
+  background: var(--bg);
+  color: var(--white);
+  text-align: center;
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  position: relative;
+}
+
+/* --- Fecha superior --- */
+.countdown-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.countdown-month {
+  font-family: var(--cd-text-font);
+  font-size: clamp(20px, 4.5vw, 30px);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.month-arc {
+  width: 100%;
+  max-width: 160px; /* controla el tamaño final */
+  display: block;
+  margin: 0 auto;
+}
+
+.month-text {
+  fill: var(--white);
+  font-family: var(--cd-text-font); /* mantiene tu font actual */
+  font-size: clamp(30px, 5.5vw, 40px); /* mismo tamaño responsive */
+  letter-spacing: 0.35em;
+}
+
+
+.countdown-date-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2.5vw, 40px);
+  flex-wrap: wrap;
+  width: 100%;
+}
+.countdown-weekday,
+.countdown-year {
+  font-family: var(--cd-text-font);
+  font-size: clamp(16px, 4vw, 24px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--white);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.countdown-weekday::before,
+.countdown-weekday::after,
+.countdown-year::before,
+.countdown-year::after {
+  content: "";
+  width: clamp(60px, 12vw, 100px);
+  height: 1px;
+  background: rgba(255,255,255,0.4);
+}
+
+.countdown-day {
+  font-family: var(--font-main);
+  font-size: clamp(72px, 11vw, 125px);
+  letter-spacing: -0.03em;
+  color: var(--white);
+  line-height: 0.9;
+  transform: translateX(-16px);
+}
+
+/* --- Botón --- */
+
+.countdown-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Espacio interno adaptable */
+  padding: clamp(8px, 1.5vw, 16px) clamp(14px, 2.5vw, 28px);
+
+  /* Espacio entre texto e icono */
+  gap: clamp(4px, 1vw, 10px);
+
+  margin: 0 auto 40px;
+
+  background: var(--white);
+  color: #4b5f37;
+
+  /* Bordes adaptables */
+  border-radius: clamp(20px, 4vw, 999px);
+
+  text-transform: uppercase;
+  font-family: var(--cd-text-font);
+
+  /* Texto responsive */
+  font-size: clamp(10px, 1.5vw, 14px);
+
+  /* Espaciado letras */
+  letter-spacing: clamp(0.08em, 0.2vw, 0.18em);
+
+  text-decoration: none;
+  box-shadow: 0 20px 35px rgba(85, 103, 63, 0.2);
+
+  /* Animación suave */
+  transition: all 0.25s ease;
+}
+.countdown-button:hover {
+  transform: translateY(-1px);
+  background: #4b5f37;
+  color: var(--white);
+}
+
+.countdown-button::after {
+  content: '➜';
+  font-size: 0.95em;
+}
+
+/* --- Mensaje --- */
+.countdown-message {
+  max-width: 760px;
+  margin: 0 auto 42px;
+  font-family: var(--cd-text-font);
+  font-size: var(--cd-text-size);
+  letter-spacing: 0.15em;
+  line-height: 1.85;
+  text-transform: uppercase;
+  color: var(--white);
+  opacity: 0.95;
+}
+
+/* --- Título --- */
+.countdown-title {
+  font-family: var(--cd-title-font);
+  font-weight: 200;
+  font-size: var(--cd-title-size);
+  color: var(--white);
+  margin-bottom: 18px;
+}
+
+/* --- Grid contador --- */
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(96px, 1fr)); /* se compacta SOLO en PC abajo */
+  gap: var(--cd-grid-gap);
+  justify-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--cd-item-gap);
+  min-width: var(--cd-item-minw);
+  padding: 20px;
+  border-radius: var(--radius-card);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease, background 0.3s ease;
+  position: relative;
+}
+
+/* “:” SOLO PC (por defecto visible en desktop) */
+.countdown-item:not(:last-child)::after {
+  content: ':';
+  font-size: var(--cd-colon-size);
+  color: rgba(255, 255, 255, var(--cd-colon-opacity));
+  position: absolute;
+  right: var(--cd-colon-right);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.countdown-number {
+  font-family: var(--cd-number-font);
+  font-size: var(--cd-number-size);
+  font-weight: var(--cd-number-weight);
+  letter-spacing: var(--cd-number-letter);
+  line-height: 1;
+  text-shadow: var(--cd-number-shadow);
+  color: var(--white);
+}
+
+.countdown-label {
+  font-family: var(--cd-label-font);
+  font-size: var(--cd-label-size);
+  letter-spacing: var(--cd-label-letter);
+  text-transform: uppercase;
+  color: var(--soft);
+  opacity: 0.95;
+}
+
+/* Hover desktop */
+@media (hover: hover) {
+  .countdown-item:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(255,255,255,0.08);
+  }
+}
+
+/* =========================================================
+   05) HISTORIA / PALABRAS
+   ========================================================= */
+.story-section {
+  position: relative;
+  width: 100%;
+  min-height: 65dvh;           /* dejamos SOLO UNA (sin duplicidad) */
+  display: flex;
+  justify-content: center;
+ align-items: flex-start;
+  overflow: hidden;
+  isolation: isolate;
+  padding-top: clamp(22px, 5vh, 60px);
+}
+
+.story-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.04));
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Fondo responsive */
+.story-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+}
+
+.story-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+/* Caja del texto */
+.story-text {
+  position: relative;
+  z-index: 2;
+  width: 80vw;
+  max-width: 700px;
+  padding: clamp(24px, 5vw, 48px);
+  text-align: center;
+  touch-action: manipulation;
+}
+
+.story-text p {
+  font-family: var(--font-serif);
+  font-size: clamp(14px, 2.5vw, 18px);
+  line-height: 1.75;
+  color: var(--ink);
+  margin: 0;
+  text-shadow: 0 2px 14px rgb(255, 255, 255);
+  cursor: pointer;
+  text-align: justify
+}
+
+/* =========================================================
+   06) ANIMACIONES (COMPATIBLE CON TU JS: .animate + .visible)
+   - Evita que quede todo invisible si la animación no dispara
+   ========================================================= */
+.animate{
+  opacity: 0;
+  transform: translateY(30px);
+  will-change: opacity, transform;
+}
+
+.animate.visible{
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* Respeta usuarios con menos animación */
+@media (prefers-reduced-motion: reduce){
+  .animate, .animate.visible{
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   07) RESPONSIVE (TABLET / MÓVIL)
+   ========================================================= */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .audio-toggle {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    bottom: 12px;
+    right: 12px;
+  }
+}
+
+/* Móvil */
+@media (max-width: 768px) {
+
+  /* HERO */
+  .contenido-boda {
+    line-height: 2.8;
+    gap: clamp(12px, 3vw, 20px);
+  }
+
+  .pre {
+    line-height: 6;
+    font-size: clamp(14px, 2.8vw, 22px);
+  }
+
+  .nombre {
+    font-size: clamp(80px, 14vw, 130px);
+  }
+
+  .amp {
+    font-size: clamp(26px, 8vw, 50px);
+  }
+
+  .fecha {
+    font-size: clamp(26px, 7vw, 44px);
+  }
+
+  .confirmar {
+    font-size: clamp(10px, 2.5vw, 14px);
+  }
+
+  .audio-toggle {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.75rem;
+    bottom: 8px;
+    right: 8px;
+    border-radius: 20px;
+  }
+
+  /* CUENTA ATRÁS */
+  .countdown-section {
+    width: 100vw;
+    padding: 0;
+  }
+
+  .countdown-panel {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: clamp(16px, 5vw, 20px) clamp(16px, 5vw, 20px);
+    border-radius: 24px;
+  }
+.countdown-date {
+    margin-bottom: 50px;
+  }
+
+.countdown-day {
+    transform: translateX(-50px);
+  }
+
+  .countdown-weekday {
+    transform: translateX(-50px);
+  }
+
+  .countdown-year {
+    transform: translateX(-50px);
+  }
+
+
+  .countdown-line { width: 50px; }
+ 
+  .countdown-grid {
+    grid-template-columns: repeat(2, minmax(76px, 1fr));
+    gap: var(--cd-grid-gap);
+    width: 100%;
+  }
+
+  .countdown-item {
+    width: 100%;
+    min-width: 0;
+    gap: var(--cd-item-gap);
+    border-radius: 16px;
+  }
+
+  /* En móvil, SIN “:” */
+  .countdown-item::after { display:none !important; }
+
+  /* HISTORIA */
+  .story-text {
+    width: 90vw;
+    max-width: none;
+    padding: clamp(16px, 4vw, 32px);
+  }
+
+  .story-text p {
+    font-size: clamp(10px, 2vw, 13px);
+    line-height: 1.6;
+  }
+
+  .story-section { 
+ min-height: auto;
+  padding-bottom: 90px;
+}
+
+}
+.countdown-date {
+  margin-bottom: 30px;
+}
+
+
+/* Pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .hero { height: 100dvh; }
+
+  .contenido-boda {
+    line-height: 2.8;
+    gap: clamp(4px, 2vw, 8px);
+  }
+
+  .nombre { font-size: clamp(60px, 10vw, 100px); }
+
+  .countdown-grid { gap: 8px; }
+  .countdown-item { padding: 8px; min-height: 80px; }
+}
+
+/* =========================================================
+   08) AJUSTE SOLO PARA PC (COMPACTAR CONTADOR)
+   - Esto mantiene móvil como está, y en PC junta más los números
+   ========================================================= */
+
+@media (min-width: 769px) {
+
+  .countdown-grid {
+    grid-template-columns: repeat(4, minmax(70px, 1fr));
+    gap: var(--cd-grid-gap);
+  }
+
+  .countdown-item:not(:last-child)::after {
+    right: var(--cd-colon-right);
+  }
+
 }
