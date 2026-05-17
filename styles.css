@@ -660,7 +660,7 @@ body {
   ----------------------------- */
 
   .details-img-top {
-    width: clamp(120px, 20vw, 180px);
+    width: clamp(140px, 24vw, 200px);
     height: auto;
     margin-top: clamp(40px, 8vw, 60px);
   }
@@ -691,7 +691,7 @@ body {
     font-family: var(--font-script);
     font-size: clamp(42px, 6vw, 70px);
     color: white;
-    margin-top: -10px
+    margin-top: -8px
   }
 
   .details-subtitle {
