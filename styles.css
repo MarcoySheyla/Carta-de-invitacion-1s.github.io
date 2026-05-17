@@ -427,6 +427,8 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  justify-content: center;
+  text-align: center;
   min-width: 65px;
   padding: clamp(10px, 1.5vw, 14px);
   border-radius: var(--radius-card);
@@ -459,12 +461,13 @@ body {
 }
 
 .countdown-label {
-  font-family: var(--font-serif);
+  font-family: arial,sans-serif;
   font-size: clamp(8px, 1.2vw, 10px);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--soft);
+  color: #7A8450;
   opacity: 0.95;
+  font-weight: 700;
 }
 
 @media (hover: hover) {
@@ -579,7 +582,7 @@ body {
 /* GENERAL */
 
 .story-lettering {
-  transform: translateX(-50%) translateY(60px);
+  transform: translateX(-50%) translateY(70px);
 }
 
 .story-countdown {
@@ -587,7 +590,7 @@ body {
 }
 
 .story-text {
-  transform: translateY(0px);
+  transform: translateY(25px);
 }
 
 .countdown-grid {
@@ -659,10 +662,10 @@ body {
   .details-img-top {
     width: clamp(120px, 20vw, 180px);
     height: auto;
-    margin-top: clamp(20px, 6vw, 39px);
+    margin-top: clamp(40px, 8vw, 60px);
   }
   .details-img {
-    width: clamp(60px, 15vw, 100px);
+    width: clamp(80px, 15vw, 110px);
     margin-top: clamp(20px, 6vw, 39px);
   }
 
@@ -673,11 +676,10 @@ body {
 
   .details-divider {
     width: 100%; /* 🔥 ocupa todo el ancho */
-    max-width: 700px; /* 🔥 límite en PC (editable) */
-    margin-top: clamp(35px, 6vw, 39px);
+    max-width: 500px; /* 🔥 límite en PC (editable) */
+    margin-top: clamp(35px, 7vw, 39px);
     display: block;
     margin: 0auto;
-
     height: auto; /* 🔥 mantiene proporción */
   }
 
@@ -687,14 +689,14 @@ body {
 
   .details-title {
     font-family: var(--font-script);
-    font-size: clamp(40px, 6vw, 69px);
+    font-size: clamp(42px, 6vw, 70px);
     color: white;
     margin-top: -10px
   }
 
   .details-subtitle {
     font-family: var(--font-script);
-    font-size: clamp(16px, 3vw, 25px);
+    font-size: clamp(20px, 6vw, 30px);
     margin-top: -15px;
     color: white;
     margin-bottom: clamp(12px, 1.5vw, 14px);
@@ -702,20 +704,20 @@ body {
 
   .details-block-title {
     font-family: 'Libre Baskerville', serif;
-    font-size: clamp(8px, 2vw, 18px);
+    font-size: clamp(12px, 2.5vw, 22px);
     font-weight: bold;
     color: white;
   }
 
   .details-time {
     font-family: 'Libre Baskerville', serif;
-    font-size: clamp(8px, 2vw, 15px);
+    font-size: clamp(10px, 2.5vw, 18px);
     color: white;
   }
 
   .details-text {
     font-family: 'Libre Baskerville', serif;
-    font-size: clamp(8px, 2vw, 14px);
+    font-size: clamp(10px, 2.5vw, 18px);
     color: white;
   }
 
@@ -735,7 +737,7 @@ body {
     background: #9aa37a; /* 🔥 3 tonos más claro aprox */
     color: white;
     font-family: 'Libre Baskerville', serif;
-    font-size: clamp(8px, 2vw, 14px);
+    font-size: clamp(10px, 2.5vw, 18px);
     font-weight: bold;
   }
 
@@ -776,4 +778,8 @@ body {
     .details-section {
       gap: 5px;
     }
+    .details-divider {
+    max-width: 260px; /* 🔥 límite en PC (editable) */
+    
+  }
   }
