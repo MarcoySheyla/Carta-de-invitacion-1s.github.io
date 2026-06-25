@@ -1,4 +1,3 @@
-
 /* =========================================================
    RESET
    ========================================================= */
@@ -11,6 +10,8 @@
 html, body {
   width: 100%;
   height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* =========================================================
@@ -59,6 +60,20 @@ body {
   overflow-y: auto;
 }
 
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.confetti-canvas.confetti-show {
+  opacity: 1;
+}
 
 /* Fix para notch en iOS */
 @supports (padding: max(0px)) {
@@ -70,11 +85,14 @@ body {
   }
 }
 
+
+
+
 /* =========================================================
    SECCIÓN 1: SOBRE (3D ENVELOPE)
    ========================================================= */
 .container {
-  width: 100vw;
+  width: 100%;
   position: relative;
   display: flex;
   justify-content: center;
@@ -84,13 +102,14 @@ body {
   overflow: hidden;
   background: white;
   touch-action: manipulation;
-  height: calc(var(--vh) * 100);
+  min-height: 100vh;
+  height: auto;
 }
 
 .sobre {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: clamp(320px,85vw, 800px);
+  height: auto;
   object-fit: contain;
   object-position: center;
   max-width: 200vw;
@@ -101,7 +120,6 @@ body {
 .base {
   z-index: 1;
   opacity: 1;
-  transition: opacity 3s linear;
   will-change: opacity;
   backface-visibility: hidden;
 }
@@ -111,7 +129,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, #f7f2e7, #e9e2d3);
+  background: #ffffff;
   z-index: 1;
   transform: translateZ(-60px);
   opacity: 0;
@@ -126,9 +144,10 @@ body {
 
 /* SOLAPA */
 .flap {
+  transform: scale(1.02);
   z-index: 3;
   transform-origin: top center;
-  transform: rotateX(0deg) translateZ(0px);
+  transform: scale(1.02) rotateX(0deg) translateZ(0px);
   backface-visibility: hidden;
   transform-style: preserve-3d;
   will-change: transform, opacity;
@@ -136,7 +155,7 @@ body {
 }
 
 .open .flap {
-  transform: rotateX(-170deg) translateZ(140px);
+  transform: scale(1.02) rotateX(-170deg) translateZ(140px);
   opacity: 0;
   transition:
     transform 30s cubic-bezier(0.22, 1, 0.36, 1),
@@ -146,6 +165,7 @@ body {
 /* DESVANECER BASE */
 .open .base {
   opacity: 0;
+   transition: opacity 2s ease;
 }
 
 /* FLASH */
@@ -162,13 +182,10 @@ body {
   animation: flashEffect 1.2s forwards;
 }
 
-@keyframes flashEffect {
-  20% { opacity: 0; }
-  100% { opacity: 1; }
-}
+
 
 /* =========================================================
-   SECCIÓN 2: CONTENIDO DE BODA (INICIALMENTE OCULTO)
+  CONTENIDO DE BODA (INICIALMENTE OCULTO)
    ========================================================= */
 .content-page2-hidden {
   display: none;
@@ -178,7 +195,7 @@ body {
 .content-page2-visible {
   display: block;
   width: 100%;
-  background: var(--bg);
+  background: #ffffff;
   overflow-x: hidden;
 }
 
@@ -193,7 +210,7 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: calc(var(--vh) * 100);
+  min-height: 100vh;
   height: auto;
 }
 
@@ -236,8 +253,9 @@ body {
 
 .pre {
   font-family: var(--font-serif);
-  font-size: clamp(12px, 3vw, 22px);
+  font-size: clamp(12px, 4vw, 22px);
   letter-spacing: clamp(0.2em, 2vw, 0.6em);
+  margin-bottom: clamp(16px, 9vw, 18px);
 }
 
 .nombres {
@@ -248,20 +266,55 @@ body {
 
 .nombre {
   font-family: var(--font-script);
-  font-size: clamp(48px, 14vw, 130px);
+  font-size: clamp(60px, 20vw, 130px);
   line-height: 1;
 }
 
 .amp {
   font-family: var(--font-alt);
-  font-size: clamp(24px, 6vw, 48px);
+  font-size: clamp(26px, 8vw, 48px);
 }
 
 .fecha {
   font-family: var(--font-script);
   font-size: clamp(20px, 4vw, 32px);
   letter-spacing: clamp(0.1em, 1vw, 0.3em);
+  margin-top: clamp(10px, 2vw, 18px);
+  font-weight: bold;
 }
+
+
+
+/* =========================================================
+   FLECHA SCROLL (HERO)
+========================================================= */
+
+.scroll-indicator {
+  position: absolute;
+  bottom: clamp(15px, 4vh, 35px); /* ✅ responsive */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Flecha */
+.arrow {
+  width: clamp(18px, 8vw, 22px);   /* ✅ tamaño adaptable */
+  height: clamp(18px, 8vw, 22px);
+
+  border-left: clamp(5px, 0.8vw, 6px) solid white;
+  border-bottom: clamp(4px, 0.8vw, 6px) solid white;
+
+  transform: rotate(-45deg);
+  opacity: 0.9;
+
+  animation: arrowDown 1.5s infinite;
+}
+
 
 /* =========================================================
    BOTÓN AUDIO (Floating)
@@ -281,7 +334,13 @@ body {
   cursor: pointer;
   box-shadow: var(--shadow-fab);
   transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
+}
+@media (max-width: 768px) {
+  .countdown-item {
+    backdrop-filter: none;
+    background: rgba(255,255,255,0.15);
+  }
 }
 
 .audio-toggle:hover,
@@ -296,73 +355,93 @@ body {
   border-color: #1d7a2d;
 }
 
-/* =========================================================
-   HISTORIA / PALABRAS (SIN DUPLICADOS)
-   ========================================================= */
 
+/* =========================================================
+   BOTÓN AUDIO - AJUSTE MÓVIL
+========================================================= */
+
+@media (max-width: 768px) {
+  .audio-toggle {
+    padding: 0.3rem 0.5rem;   /* ✅ más pequeño */
+    font-size: 0.8rem;         /* ✅ texto más compacto */
+    bottom: 12px;              /* ✅ más pegado abajo */
+    right: 12px;               /* ✅ mejor posición */
+  }
+}
+
+
+/* =========================================================
+   SECCION 2 HISTORIA / PALABRAS
+   ========================================================= */
+  
 .story-section {
-  position: relative;
   width: 100%;
-  min-height: auto;
-  min-height: calc(var(--vh) * 100);
-  height: auto;
+  background:white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* ✅ CONTROL GLOBAL RESPONSIVE */
-  justify-content: flex-start;
-  /* ✅ separación automática entre elementos */
-  gap: clamp(2px, 2vh, 12px);
-  isolation: isolate;
-  background: #ffffff;
-  padding: clamp(20px, 4vh, 40px) var(--section-pad);
-  /* ✅ espacio inferior para fondo */
-  padding-bottom: clamp(60px, 10vh, 120px);
-  overflow: hidden
+  /* ✅ espacio REAL */
+  padding: 16px 0 0;
+  /* ✅ controla TODAS las separaciones */
+  gap: 15px;
+  position: relative;
+}
+
+.story-corner-img {
+  position: absolute;
+  max-width: 100%;
+  top: 0;
+  right: 0;
+  width: clamp(80px, 30vw, 200px);
+  height: auto;
+  z-index: 3;
+  transform: translate(30%, -20%);
+  pointer-events: none;
 }
 
 .story-countdown {
-  position: relative;
-  width: 100%;
-  max-width: 700px;
-  z-index: 2;
-  margin: 0;
-  transform: translateY(320px); /* 🔥 AQUÍ CONTROLAS TODO */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(10px, 5vw, 20px);
+  margin-bottom: clamp(40px, 20vw, 60px);
 }
 
-.story-section::after {
-  content: "";
+.story-decor-right {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.04));
-  z-index: 0;
+  bottom: -3px;   /* 🔥 sube/baja la imagen */
+  right: 0px;
+  width: clamp(80px, 30vw, 200px);
+  height: auto;
+  transform: translate(30%, 20%); /* 🔥 la saca un poco hacia fuera */
   pointer-events: none;
+  z-index: 3;
+  margin-bottom: clamp(5px, 1vw, 10px);
 }
 
 /* Fondo responsive (picture) */
 .story-bg {
-  position: absolute;
-  bottom: clamp(10px, 1.5vh, 20px);
+  margin-top: 0;
+  width: 100%;
   left: 0;
   right: 0;
-  width: 100%;
   z-index: 1;
-  margin-bottom: -10px;;
+  display: none;
 }
+
 .story-bg img {
   width: 100%;
-  height: auto;
-  object-fit: cover;
   display: block;
 }
 
 .story-lettering {
-  position: absolute;  /* 🔥 CLAVE → fuera del flujo */
-  left: 50%;           /* centra horizontalmente */
-  transform: translateX(-50%) translateY(75px); /* mueve libremente */
-  width: clamp(240px, 40vw, 600px);
-  max-width: 480px;
+  width: clamp(80px, 30vw, 200px);
   z-index: 2;
+  margin-bottom: clamp(10px, 5vw, 60px);
+   right: 0;
+   align-self: flex-start;
+   margin-top: -2px;
 }
 
 .story-lettering img {
@@ -376,20 +455,18 @@ body {
 .story-text {
   position: relative;
   z-index: 2;
-  width: clamp(240px, 85vw, 540px);
-  margin: 0 auto;
+  width: min(85vw, 540px);
+  margin-top: clamp(90px, 55vw, 120px);
   text-align: center;
   padding: clamp(10px, 2vw, 18px);
-  transform: translateY(10px); /* ✅ SOLO vertical */
 }
-
 
 .story-text p {
   font-family: var(--font-serif);
-  font-size: clamp(10px, 2vw, 16px);
+  font-size: clamp(13px, 3vw, 18px);
   line-height: 1.7;
   letter-spacing: 0.02em;
-  color: var(--ink);
+ color:#2b2b2b95;
   text-align: center;
 }
 
@@ -398,16 +475,25 @@ body {
 /* Título */
 
 .countdown-title {
-  position: absolute;  /* 🔥 fuera del flujo */
-  left: 50%;           /* centra horizontalmente */
-  transform: translateX(-50%) translateY(-120px); /* controla posición */
+  text-align: center;
   font-family: var(--font-script);
   font-weight: 200;
-  font-size: clamp(38px, 5.5vw, 64px);
+  font-size: clamp(30px, 10vw, 60px);
   color:#2b2b2b95;
-  z-index: 2;
-  margin: 0;
+  z-index: 2; 
 }
+
+.countdown-subtext{
+  font-family: var(--font-serif); /* Libre Baskerville */
+  font-size: clamp(11px, 2vw, 16px);
+  margin-bottom: clamp(5px, 1.5vh, 20px);
+  color: #2b2b2b95;
+  text-align: center;
+  width: clamp(220px, 70vw, 500px); /* evita que se estire demasiado */
+  line-height: 1.5;
+  z-index: 2;
+}
+
 
 
 /* Grid contador */
@@ -419,7 +505,8 @@ body {
   position: relative;
   z-index: 2;
   max-width: 550px;
-  margin: 0 auto;
+  margin-top: clamp(40px, 10vw, 60px);
+  margin-bottom: clamp(20px, 5vw, 35px);
 }
 
 .countdown-item {
@@ -429,14 +516,23 @@ body {
   gap: 5px;
   justify-content: center;
   text-align: center;
-  min-width: 65px;
-  padding: clamp(10px, 1.5vw, 14px);
+
+  width: clamp(80px, 20vw, 120px);
+  height: clamp(70px, 18vw, 100px);
+  padding: 12px;
+  
   border-radius: var(--radius-card);
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
   box-shadow: var(--shadow-card);
   transition: transform 0.3s ease, background 0.3s ease;
   position: relative;
+}
+
+@media (max-width: 768px) {
+  .countdown-item {
+    backdrop-filter: none;
+  }
 }
 
 /* ":" SOLO desktop (por defecto) */
@@ -492,6 +588,60 @@ body {
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
+/* Base (por si quieres ajustar velocidad global) */
+.story-section .animate {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Cuando entran en pantalla */
+.story-section .animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ✅ DELAYS EN CASCADA (orden real de tu HTML) */
+
+/* 1️⃣ Texto bíblico */
+.story-section .story-text.animate.visible {
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition-delay: 0.2s;
+}
+
+/* 2️⃣ Lettering */
+.story-section .story-lettering.animate.visible {
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition-delay: 0.5s;
+}
+
+/* 3️⃣ Título countdown */
+.story-section .countdown-title.animate.visible {
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition-delay: 0.8s;
+}
+
+/* 4️⃣ Subtexto */
+.story-section .countdown-subtext.animate.visible {
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition-delay: 1.1s;
+}
+
+/* 5️⃣ Grid contador */
+.story-section .countdown-grid.animate.visible {
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition-delay: 1.4s;
+}
+
+/* 5️⃣ story-bg */
+.story-section .story-bg.animate.visible {
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition-delay: 1.4s;
+}
+
+.story-section .story-decor-right.animate.visible {
+  transition-delay: 0.8s; /* 🔥 ajusta según orden */
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate, .animate.visible {
     opacity: 1 !important;
@@ -500,108 +650,31 @@ body {
   }
 }
 
-/* =========================================================
-   RESPONSIVE (TABLET / MÓVIL)
-   ========================================================= */
-@media (max-width: 1024px) {
-  .audio-toggle {
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
-    bottom: 12px;
-    right: 12px;
-  }
+
+/* LETRERO */
+.letrero-section.animate.visible {
+  transition-delay: 0.8s;
 }
 
+/* CARRUSEL */
+.carousel-section.animate.visible {
+  transition-delay: 1s;
+}
 /* =========================================================
    MOVIL
    ========================================================= */
 
+
 @media (max-width: 768px) {
 
-/* PANTALLA DE INICIO */
-
-  /* HERO */
-   .sobre {
-    width: 100%;
-    height: 100%;
-    max-width: 200vw;
-    max-height: 200vh;
-  }
-  .contenido-boda {
-    line-height: 2.8;
-    gap: clamp(12px, 3vw, 20px);
-  }
-
-  .pre {
-    line-height: 6;
-    font-size: clamp(14px, 2.8vw, 22px);
-  }
-
-  .nombre {
-    font-size: clamp(80px, 14vw, 130px);
-  }
-
-  .amp {
-    font-size: clamp(26px, 8vw, 50px);
-  }
-
-  .fecha {
-    font-size: clamp(26px, 7vw, 44px);
-  }
-
-  .audio-toggle {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.75rem;
-    bottom: 8px;
-    right: 8px;
-    border-radius: 20px;
-  }
-/*        SEGUNDA SECCION         */
-  /* CONTADOR */
-  .countdown-title {
-    font-size: clamp(32px, 5vw, 56px);
-    transform: translateX(-50%) translateY(-95px);
-  }
-
   .countdown-grid {
-    grid-template-columns: repeat(2, 130px); /* ✅ columnas fijas */
-    justify-content: center;               /* ✅ centra el bloque */
-    gap: 10px;  
-
+    grid-template-columns: repeat(2, 120px);
+    gap: 10px;
   }
 
-  .countdown-item {
-  width:90px;
-  height: 70px;
-  }
-
-  .countdown-item:not(:last-child)::after {
-    content: none;
-  }
-
-/* GENERAL */
-
-.story-lettering {
-  transform: translateX(-50%) translateY(70px);
-}
-
-.story-countdown {
-  transform: translateY(220px);
-}
-
-.story-text {
-  transform: translateY(25px);
-}
-
-.countdown-grid {
-  gap: 9px;
-}
-.story-section {
-  min-height: calc(var(--vh) * 80);
 
 }
 
-}
 /* Pantallas muy pequeñas */
 @media (max-width: 480px) {
   .hero { height: 100dvh; }
@@ -612,14 +685,17 @@ body {
   }
   .story-bg{ max-height: 35%; }
   .nombre { font-size: clamp(60px, 10vw, 100px); }
-
-  .story-countdown { margin-top: 8px; }
   .countdown-grid { gap: 8px; }
   .countdown-item { padding: 8px; min-height: 60px; }
 }
 
 /* AJUSTE SOLO PARA PC */
 @media (min-width: 769px) {
+
+
+  .story-lettering {
+    margin: 8px 0;
+  }
 
 }
 
@@ -641,46 +717,251 @@ body {
   }
 }
 
-/* =========================================================
-    SECCIÓN 3: DETALLES
-    ========================================================= */
 
-  .details-section {
-    width: 100%;
-    background: #7A8450;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: clamp(10px, 3vh, 20px) 0;
-    gap: 7px; /* 🔥 control global fácil */
-  }
+/* =========================================================
+    SECCION 3: DETALLES
+    ========================================================= */
+  
+.details-section {
+  width: 100%;
+  position: relative;
+  background-blend-mode: overlay;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* ✅ ORDEN CORRECTO DE CAPAS */
+ background: url("./img/bg-section3.png") center / cover no-repeat;
+  padding: clamp(10px, 3vh, 20px) 0;
+  gap: 1px;
+  z-index: 1;
+}
+
+
+.details-section::before,
+.details2-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* ✅ AQUÍ CONTROLAS LA TRANSPARENCIA */
+  background: rgba(122, 132, 80, 0.65);
+  pointer-events: none;
+  z-index: 1;
+}
 
   /* -----------------------------
     IMÁGENES
   ----------------------------- */
 
   .details-img-top {
-    width: clamp(140px, 24vw, 200px);
+    width: clamp(110px, 40vw, 280px);
     height: auto;
-    margin-top: clamp(40px, 8vw, 60px);
+    opacity: 0.95;
+    margin-top: clamp(40px, 18vw, 80px);
+    margin-bottom: clamp(10px, 2vw, 18px);
+
   }
   .details-img {
-    width: clamp(80px, 15vw, 110px);
-    margin-top: clamp(20px, 6vw, 39px);
+    width: clamp(50px, 20vw, 100px);
+    margin-top: clamp(10px, 5vw, 15px);
+    margin-bottom: clamp(10px, 4vw, 16px);
+    opacity: 0.9;
   }
 
+/* =========================================================
+   FLORES SECCION 3 DETALLES (3 IMAGENES)
+   ========================================================= */
+
+/* ===== FILA SUPERIOR (IZQ + DER) ===== */
+
+.details-flowers-row-top{
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+ }
+
+
+/* ===== FLOR ABAJO (CENTRO) ===== */
+.details-flower-bottom{
+ width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: clamp(3px, 12vw, 40px);
+  margin-bottom: clamp(35px, 12vw, 40px);
+}
+
+
+/* ===============================
+   FLORES - ANIMACIONES 6 SEGUNDOS
+================================ */
+
+.details-flower {
+  width: clamp(125px, 45vw, 340px);
+  height: auto;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  /* 🔥 aumenta brillo */
+  will-change: clip-path, opacity, transform;
+}
+
+/* FLOR 1: IZQUIERDA → DERECHA (6 segundos) */
+.df1 {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 3s ease-out, opacity 6s ease-out;
+}
+
+.df1.visible {
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+}
+
+/* FLOR 2: DERECHA → IZQUIERDA (6 segundos) */
+.df2 {
+  clip-path: inset(0 0 0 100%);
+  transition: clip-path 3s ease-out, opacity 6s ease-out;
+}
+
+.df2.visible {
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+}
+
+/* FLOR 3: CENTRO → BORDES + ZOOM (6 segundos) */
+.df3 {
+   clip-path: inset(0 0 0 100%);
+  transition: clip-path 3s ease-out, opacity 6s ease-out;
+}
+
+.df3.visible {
+clip-path: inset(0 0 0 0);
+  opacity: 0.4;
+}
+
+.details-section * {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   HOJAS CAÍDAS - ANIMACIÓN (secciones 4 y 6)
+   ========================================================= */
+
+/* Asegura que las secciones objetivo permitan posicionar las hojas */
+.it2-section, #itinerario, .final-section {
+  position: relative;
+  overflow: visible;
+}
+
+.leaves-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6; /* por encima de fondos, pero mantén baja opacidad */
+  overflow: visible;
+}
+
+.falling-leaf {
+   position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(37.5px, 7.9vw, 105px);
+  pointer-events: none;
+  will-change: transform;
+  transform-style: preserve-3d;
+  }
+
+@keyframes leafFall {
+  /* Entrada suave con desvanecimiento */
+  0% {
+    transform: translate3d(0, -10vh, 0) rotateZ(var(--r-start, 0deg)) rotateX(0deg) rotateY(0deg) scale(var(--s, 1));
+    opacity: 0;
+  }
+  
+  /* Fade in rápido */
+  2% {
+    opacity: 0.78;
+  }
+  
+  /* Primera oscilación derecha (suave) */
+  10% {
+    transform: translate3d(calc(var(--amp) * 0.25), 8vh, 0) rotateZ(calc(var(--r-start) + var(--spin) * 0.12)) rotateX(15deg) rotateY(8deg) scale(var(--s, 1));
+    opacity: 0.92;
+  }
+  
+  /* Peak derecha con aceleración vertical */
+  18% {
+    transform: translate3d(calc(var(--amp) * 0.42), 22vh, 0) rotateZ(calc(var(--r-start) + var(--spin) * 0.28)) rotateX(25deg) rotateY(15deg) scale(var(--s, 1));
+    opacity: 0.9;
+  }
+  
+  /* Cambio de dirección (izquierda) */
+  28% {
+    transform: translate3d(calc(var(--amp) * 0.15), 38vh, 0) rotateZ(calc(var(--r-start) + var(--spin) * 0.42)) rotateX(30deg) rotateY(5deg) scale(var(--s, 1));
+    opacity: 0.88;
+  }
+  
+  /* Oscilación izquierda fuerte */
+  38% {
+    transform: translate3d(calc(var(--amp) * -0.38), 52vh, 0) rotateZ(calc(var(--r-start) + var(--spin) * 0.56)) rotateX(28deg) rotateY(-12deg) scale(var(--s, 1));
+    opacity: 0.86;
+  }
+  
+  /* Mid-point: cambio de ritmo, ralentización momentánea */
+  50% {
+    transform: translate3d(calc(var(--amp) * -0.28), 65vh, 0) rotateZ(calc(var(--r-start) + var(--spin) * 0.70)) rotateX(20deg) rotateY(-8deg) scale(var(--s, 1));
+    opacity: 0.83;
+  }
+  
+  /* Segunda oscilación derecha (más lenta, como ráfaga) */
+  62% {
+    transform: translate3d(calc(var(--amp) * 0.08), 77vh, 0) rotateZ(calc(var(--r-start) + var(--spin) * 0.82)) rotateX(24deg) rotateY(6deg) scale(var(--s, 1));
+    opacity: 0.80;
+  }
+  
+  /* Aceleración final: derecha nuevamente */
+  72% {
+    transform: translate3d(calc(var(--amp) * 0.32), 88vh, 0) rotateZ(calc(var(--r-start) + var(--spin) * 0.90)) rotateX(32deg) rotateY(10deg) scale(var(--s, 1));
+    opacity: 0.72;
+  }
+  
+  /* Oscilación izquierda final */
+  82% {
+    transform: translate3d(calc(var(--amp) * -0.15), 100vh, 0) rotateZ(calc(var(--r-start) + var(--spin) * 0.96)) rotateX(28deg) rotateY(-6deg) scale(var(--s, 1));
+    opacity: 0.45;
+  }
+  
+  /* Casi al suelo: movimiento lento y centrado */
+  92% {
+    transform: translate3d(calc(var(--amp) * 0.05), 115vh, 0) rotateZ(calc(var(--r-start) + var(--spin) * 0.99)) rotateX(22deg) rotateY(2deg) scale(var(--s, 1));
+    opacity: 0.15;
+  }
+  
+  /* Desaparición suave */
+  100% {
+    transform: translate3d(var(--amp), 135vh, 0) rotateZ(calc(var(--r-start) + var(--spin))) rotateX(20deg) rotateY(0deg) scale(var(--s, 1));
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .falling-leaf {
+    animation: none !important;
+    opacity: 0.12 !important;
+  }
+}
 
   /* =============================
     IMAGEN DECORATIVA HORIZONTAL
   ============================= */
 
   .details-divider {
-    width: 100%; /* 🔥 ocupa todo el ancho */
-    max-width: 500px; /* 🔥 límite en PC (editable) */
-    margin-top: clamp(35px, 7vw, 39px);
+    width: clamp(120px, 28vw, 200px); /* 🔥 ocupa todo el ancho */
+    max-width: 400px; /* 🔥 límite en PC (editable) */
     display: block;
-    margin: 0auto;
+    margin: clamp(35px, 10vw, 40px) 0;
     height: auto; /* 🔥 mantiene proporción */
+    opacity: 0.8;
   }
 
   /* -----------------------------
@@ -688,37 +969,70 @@ body {
   ----------------------------- */
 
   .details-title {
-    font-family: var(--font-script);
-    font-size: clamp(42px, 6vw, 70px);
-    color: white;
-    margin-top: -8px
+    font-family: var(--font-script),cursive;
+    font-size: clamp(28px, 12vw, 60px);
+    color: #ffffff;
+    margin-top: -6px;
+    font-weight: normal;
+    text-shadow: 0 clamp(2px, 0.5vw, 6px) clamp(6px, 1.5vw, 12px) rgba(0,0,0,0.25);
+    letter-spacing: clamp(0.06em, 0.2vw, 0.08em);
+    margin-bottom: clamp(4px, 1vw, 10px)
+
   }
 
   .details-subtitle {
     font-family: var(--font-script);
-    font-size: clamp(20px, 6vw, 30px);
-    margin-top: -15px;
-    color: white;
-    margin-bottom: clamp(12px, 1.5vw, 14px);
+    font-size: clamp(17px, 9.5vw, 24px);
+    margin-top: clamp(-16px, -3vw, -15px);
+    margin-bottom: clamp(40px, 15vw, 80px);
+    opacity: 0.9;
+    color: #ffffff;
+    letter-spacing: 0.04em;
   }
 
   .details-block-title {
-    font-family: 'Libre Baskerville', serif;
-    font-size: clamp(12px, 2.5vw, 22px);
-    font-weight: bold;
-    color: white;
+   font-family: 'Great Vibes', cursive;
+   font-size: clamp(22px, 10vw, 35px);
+   letter-spacing: clamp(0.02em, 0.5vw, 0.06em);
+    color: #ffffff;
+    font-weight: normal;
+    margin-top: 4px;
+    margin-bottom: clamp(6px, 1.5vw, 10px);
   }
+  
+.details-block-title.d6b {
+  font-size: clamp(11px, 4vw, 18px); /* 🔽 más pequeño que el título principal */
+  margin-top: -12px; /* 🔧 controla la distancia con el título arriba */
+  margin-bottom: clamp(6px, 1.5vw, 10px);
+  opacity: 0.9;
+}
+
+.details-block-title.d11b {
+  font-size: clamp(11px, 4vw, 18px); /* 🔽 más pequeño que el título principal */
+  margin-top: -12px; /* 🔧 controla la distancia con el título arriba */
+  margin-bottom: clamp(6px, 1.5vw, 10px);
+  opacity: 0.9;
+}
+
 
   .details-time {
     font-family: 'Libre Baskerville', serif;
-    font-size: clamp(10px, 2.5vw, 18px);
-    color: white;
+    font-size: clamp(10px, 2.5vw, 14px);
+    color: #ffffff;
+    margin-top: clamp(-6px, -2vw, -10px);
+    letter-spacing: clamp(0.04em, 0.5vw, 0.08em);
+    line-height: 1.6;
+
   }
 
   .details-text {
     font-family: 'Libre Baskerville', serif;
-    font-size: clamp(10px, 2.5vw, 18px);
-    color: white;
+    font-size: clamp(10px, 3vw, 17px);
+    color: #ffffff; 
+    letter-spacing: clamp(0.02em, 0.01vw, 0.06em);
+    line-height: 1.6;
+    margin-top: clamp(-8px, -6vw, -10px);
+
   }
 
   /* -----------------------------
@@ -727,18 +1041,21 @@ body {
 
   .details-box {
     min-height: clamp(20px, 3vh, 55px);
-    padding: 0 20px;
+    padding: 0 clamp(16px, 4vw, 18px);
     display: flex;
+    text-align: center;
     align-items: center;
     justify-content: center;
-
-    border-radius: 10px;
-    height: clamp(24px, 4vw, 34px);
-    background: #9aa37a; /* 🔥 3 tonos más claro aprox */
-    color: white;
+    border-radius: 999px;
+    border: 1.8px solid rgba(255,255,255,0.6);
+    height: 28px;
+    background: transparent; /* 🔥 3 tonos más claro aprox */
+    color: rgba(255, 255, 255, 0.822);
     font-family: 'Libre Baskerville', serif;
-    font-size: clamp(10px, 2.5vw, 18px);
-    font-weight: bold;
+    font-size: clamp(8px, 2.5vw, 12px);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    margin-top: clamp(2px, 1vw, 6px);
   }
 
   /* -----------------------------
@@ -749,25 +1066,26 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(8px, 2vw, 14px);
+    font-size: clamp(11px, 2.5vw, 14px);
     height: clamp(28px, 4vw, 34px);
-    padding: 0 20px;
-
-    background: white;
+    padding: 0 clamp(18px, 4vw, 24px);
+    background: #fffffff2;
     color: #7A8450;
-
     font-family: 'Libre Baskerville', serif;
-    text-decoration: underline;
-
-    border-radius: 20px;
-
+    text-decoration: none;
+    border: 1.5px solid white;
     transition: all 0.3s ease;
+    margin-top: clamp(6px, 2vw, 10px);
+    margin-bottom: clamp(30px, 15vw, 45px);
+    font-weight: bold;
+    letter-spacing: clamp(0.05em, 0.6vw, 0.1em);
+    border-radius: 999px;
   }
 
   /* interacción click */
   .details-button:active {
-    background: #7A8450;
-    color: white;
+    background: white;
+    color: #7A8450;
   }
 
   /* -----------------------------
@@ -776,10 +1094,1093 @@ body {
 
   @media (max-width: 768px) {
     .details-section {
-      gap: 5px;
+      gap: 1px;
     }
     .details-divider {
     max-width: 260px; /* 🔥 límite en PC (editable) */
     
   }
   }
+/* -----------------------------
+    CASCADA DE ANIMACIONES (AJUSTA LOS DELAYS AQUÍ)
+  ----------------------------- */
+
+
+.details-section .animate {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.details-section .animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* ✅ ORDEN REAL CONTROLADO */
+.d1.visible { transition-delay: 1.4s; }
+.d2.visible { transition-delay: 1.7s; }
+.d3.visible { transition-delay: 2s; }
+.d4.visible { transition-delay: 2.3s; }
+
+.d5.visible { transition-delay: 2.6s; }
+.d6.visible { transition-delay: 2.9s; }
+.d6b.visible { transition-delay: 3.05s; }
+.d7.visible { transition-delay: 3.2s; }
+.d8.visible { transition-delay: 3.5s; }
+.d9.visible { transition-delay: 3.8s; }
+
+.d10.visible { transition-delay: 4.1s; }
+.d11.visible { transition-delay: 4.4s; }
+.d11b.visible { transition-delay: 4.55s; }
+.d12.visible { transition-delay: 4.7s; }
+.d13.visible { transition-delay: 5s; }
+.d14.visible { transition-delay: 5.3s; }
+
+
+
+
+
+
+
+
+/* SECCION 4 =  ITINERARIO ========================================================
+ / centro / derecha) */   
+.it2-row{
+  display: grid;
+  grid-template-columns: 1fr var(--it2-mid) 1fr;
+  align-items: center;
+  position: relative;
+  min-height: clamp(20px, 4vh, 30px);
+}
+
+/* Línea central */
+.it2-mid{
+  position: relative;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.it2-mid::before{
+  content: "";
+  position: absolute;
+  top: -12px;
+  bottom: -12px;
+  left: 50%;
+  width: var(--it2-line);
+  transform: translateX(-50%);
+  background: #7A8450;
+  border-radius: 2px;
+}
+
+/* Marcador corazón en cada fila */
+.it2-row::after{
+  content: "♡";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  width: clamp(16px, 3vw, 22px);
+  height: clamp(16px, 3vw, 22px);
+  display: grid;
+  place-items: center;
+
+  color: #fff;
+  font-size: clamp(10px, 2vw, 14px);
+  line-height: 1;
+
+  border: 2px solid rgba(255,255,255,0.90);
+  border-radius: 999px;
+  background: #7A8450; /* recorta la línea detrás */
+}
+
+/* Columnas */
+.it2-col{
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* ✅ centrado */
+  justify-content: center;
+  text-align: center;   /* ✅ textos centrados */
+  gap: 3px;
+}
+
+/* Icono */
+.it2-icon{
+  width: var(--it2-icon);
+  height: auto;
+  display: block;
+  margin-bottom: clamp(6px,1.5vw,8px);
+}
+
+/* Texto */
+.it2-time,
+.it2-text{
+  font-family: var(--font-serif);
+  font-size: var(--it2-text);
+  color: #7A8450;
+  margin: 0;
+  line-height: 1;
+}
+
+/* Ajuste sutil para que quede elegante */
+.it2-time{ opacity: 0.95; }
+.it2-text{ opacity: 1; }
+
+/* ==========================
+   RESPONSIVE FINO (móvil)
+   Mantiene alternancia y centra todo sin romper
+========================== */
+@media (max-width: 768px){
+  .it2-section{
+    --it2-max: min(92vw, 420px);
+    --it2-mid: 30px;
+  }
+}
+/*   Fondo oliva #7A8450 + todo blanco + columnas alternas
+========================================================= */
+
+.it2-section{
+  width: 100%;
+  
+  /* ✅ MISMO FONDO */
+  background-size: 100% auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  background:white;
+  color: #7A8450;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* ✅ fácil de editar (como sección 4) */
+  --it2-pad-y: clamp(30px, 12vh, 60px);
+  --it2-gap: clamp(10px, 2vh, 18px);
+
+  /* ✅ tamaños base móvil pedidos */
+  --it2-icon: clamp(30px, 12vw, 100px);   /* 25px móvil → sube en PC */
+  --it2-text: clamp(11px, 1.5vw, 16px);  /* 9px móvil → sube en PC */
+
+  /* ✅ línea y separación de columnas */
+  --it2-line: 2px;
+  --it2-mid: clamp(10px, 3vw, 20px);    /* zona central de la línea */
+  --it2-max: min(92vw, 560px);
+
+  padding: var(--it2-pad-y) 0;
+  gap: var(--it2-gap);
+}
+
+/* Título (estilo elegante) */
+.it2-title{
+  font-family: var(--font-script);
+  font-size: clamp(30px, 12vw, 60px);
+  font-weight: 400;
+  color: #7A8450;
+  margin-bottom: clamp(30px,15vw,40px);
+  text-align: center;
+}
+
+/* Contenedor */
+.it2-wrap{
+  width: var(--it2-max);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.5vh, 6px);
+  position: relative;
+}
+
+
+
+
+
+
+  /* =====SECCION 5: DETALLES2 ===================================================/* ================================================= */
+
+
+.details2-section{
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-blend-mode: overlay;
+ background: url("./img/bg-section5.png") center / cover no-repeat;
+  padding: clamp(12px, 4vh, 25px) 0 clamp(30px, 8vh, 60px);
+  z-index: 1;
+}
+
+.details2-section * {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* Tamaños y tipografías */
+.details2-img{
+  width: clamp(55px, 20vw, 100px);
+  height: auto;
+  display: block;
+  margin-top: clamp(50px, 2vw, 40px);
+  margin-bottom: clamp(6px, 2.5vw, 8px);
+}
+
+.details2-title{
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(32px, 6vw, 45px);
+  color: #ffffff;
+  margin-top: 6px;
+  text-align: center;
+}
+
+
+/* CONTENEDOR */
+.color-image-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* IMAGEN */
+.color-image {
+  width: clamp(60px, 30vw, 160px); /* 🔥 MÁS ANCHA */
+  margin-bottom: 20PX;
+  height: auto;
+  display: block;
+  transform: scale(1.2); /* 🔥 elimina aire lateral */
+  /* 🔥 RECORTE INTELIGENTE */
+  object-fit: cover;
+}
+
+
+.color-text-line {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  white-space: nowrap;
+  margin-top: 0px;
+  margin-bottom: 8px;
+
+}
+
+/* Texto 1 */
+.color-text-1 {
+  font-family: var(--font-serif);
+  font-size: clamp(12px, 2.5vw, 20px);
+  color: #ffffff;
+}
+
+/* Texto 2 */
+.color-text-2 {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(16px, 5vw, 30px);
+  color: #ffffff;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+/* Texto 3 */
+.color-text-3 {
+  font-family: var(--font-serif);
+  font-size: clamp(12px, 2.5vw, 20px);
+  color: #ffffff;
+}
+
+.details2-text{
+  font-family: var(--font-serif);
+  font-size: clamp(10px, 2.5vw, 18px);
+  color: #ffffff;
+  margin-bottom: clamp(8px, 1.5vw, 12px);
+  text-align: center;
+
+  /* para que en móvil no se extienda demasiado */
+  width: min(88vw, 520px);
+  line-height: 1.45;
+}
+
+
+
+/* Botones (igual filosofía que tu details-button pero invertido) */
+.details2-button{
+  height: clamp(28px, 4vw, 34px);
+  padding: 0 clamp(18px, 4vw, 24px);
+  transition: all 0.3s ease;
+  border: 1px solid white;
+  border-radius: 999px;
+  background: #fffffff2;
+  color: #7A8450;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(6px, 1.5vw, 10px);
+  margin-bottom: clamp(20px, 5vw, 35px);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  letter-spacing: clamp(0.05em, 0.6vw, 0.1em);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.details2-button:active{
+  transform: translateY(1px);
+}
+
+.details2-button-text{
+  font-family: var(--font-serif);
+  font-size: clamp(10px, 3vw, 16px);
+  color: #7A8450;
+  text-underline-offset: 3px;
+  font-weight: 700; /* ✅ negrita */
+}
+
+/* Estado activo: botón blanco (texto pasa a verde para que se vea) */
+.details2-button.is-active{
+  background: #ffffff;
+}
+.details2-button.is-active .details2-button-text{
+  color: #7A8450;
+}
+
+
+/* ===== Video overlay (NO mueve layout) ===== */
+.details2-video-wrap{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.details2-video-pop.is-open{
+  display: block;
+}
+
+
+/* =========================================================
+   CUADRO APORTACIÓN (SUPERPUESTO, NO MUEVE LAYOUT)
+   Reemplaza al video uno.mp4
+   ========================================================= */
+
+
+/* 1) Panel principal (blanco con tinte oliva, NO crema amarilla) */
+.gift-pop{
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 14px);
+  transform: translateX(-50%);
+  z-index: 80;
+
+  width: min(70vw, 340px);
+  display: none;
+
+  /* Fondo: blanco limpio con leve tinte verdoso (armoniza con #7A8450) */
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.96) 0%,
+    rgba(227,232,214,0.92) 100%
+  );
+
+  border-radius: 18px;
+  padding: clamp(10px, 2.5vw, 14px);
+  /* Borde fino oliva + sombra elegante */
+  border: 1px solid rgba(122,132,80,0.28);
+  box-shadow:
+    0 14px 34px rgba(0,0,0,0.18);
+
+  /* micro detalle: “tarjeta” */
+  overflow: hidden;
+}
+
+
+.gift-pop::after{
+  content:"";
+  position:absolute;
+  inset: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(122,132,80,0.18);
+  pointer-events: none;
+}
+
+
+/* Mostrar popup */
+.gift-pop.is-open{ display: block; }
+
+/* 2) Título/intro si lo tienes en HTML (si no existe, no pasa nada) */
+.gift-head{
+  text-align: center;
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.gift-title{
+  font-family: var(--font-script);
+  font-size: clamp(26px, 4.6vw, 34px);
+  line-height: 1;
+  color: #7A8450;
+  font-weight: bold;
+}
+
+.gift-sub{
+  font-family: var(--font-serif);
+  font-size: clamp(11px, 2.7vw, 13px);
+  line-height: 1.45;
+  color: rgba(43,43,43,0.70);
+  width: min(92%, 280px);
+  margin: 0 auto;
+}
+
+/* Línea decorativa sutil (no dorada fuerte, no crema) */
+.gift-divider{
+  height: 1px;
+  width: 76%;
+  margin: 10px auto 12px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(122,132,80,0.35),
+    transparent
+  );
+}
+
+/* 3) Botones internos (píldoras finas, estilo invitación) */
+.gift-toggle{
+  width: 100%;
+  border-radius: 999px;
+
+  /* Fino y elegante */
+  border: 1px solid rgba(122,132,80,0.22);
+  background: rgba(255,255,255,0.72);
+
+  padding: 8px 14px;
+  margin: 4px 0;
+
+  font-family: var(--font-serif);
+  font-size: clamp(11px, 2.9vw, 13px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  color: rgba(122,132,80,0.95);
+  cursor: pointer;
+
+  transition: transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gift-toggle:active{
+  transform: translateY(1px);
+  background: rgba(255,255,255,0.92);
+  border-color: rgba(122,132,80,0.35);
+}
+
+/* 4) Dato revelado (tarjetita interior, más “fina” y coherente) */
+.gift-reveal{
+  margin: 8px 0 10px;
+  padding: 10px 12px;
+
+  border-radius: 14px;
+
+  /* Muy suave, sin romper la paleta */
+  background: rgba(122,132,80,0.08);
+  border: 1px solid rgba(122,132,80,0.18);
+
+  font-family: var(--font-serif);
+  font-size: clamp(12px, 3.1vw, 14px);
+  letter-spacing: 0.06em;
+
+  color: rgba(43,43,43,0.82);
+  text-align: center;
+}
+
+/* 5) Móviles muy pequeños: si no cabe arriba, baja debajo */
+@media (max-width: 480px){
+  .gift-pop{
+    width: 240px;        /* ✅ tamaño REAL móvil */
+    padding: 10px 12px;  /* más compacto */
+  }
+  }
+
+
+/* estado al tocar */
+.gift-toggle:active{
+  transform: translateY(1px);
+  background: rgba(255,255,255,0.90);
+  border-color: rgba(122,132,80,0.55);
+}
+
+
+
+/* ===== Imagen final: full ancho, sin margen inferior ===== */
+.details2-footer-img{
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+  margin-top: 12px;
+}
+
+/* ===== Modal formulario overlay (NO mueve layout) ===== */
+.details2-modal{
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 90;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(14px, 4vw, 28px);
+}
+
+.details2-modal.is-open{
+  display: flex;
+}
+
+.details2-modal-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+}
+
+
+.details2-form{
+  position: relative;
+  width: min(84vw, 340px);
+
+  /* ✅ MISMO FONDO QUE gift-pop */
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.96) 0%,
+    rgba(227,232,214,0.92) 100%
+  );
+
+  border-radius: 18px;
+
+  padding: clamp(14px, 3.2vw, 18px);
+
+  /* ✅ MISMO BORDE */
+  border: 1px solid rgba(122,132,80,0.28);
+
+  /* ✅ MISMA SOMBRA */
+  box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+
+  z-index: 1;
+}
+
+
+.details2-form::after{
+  content: "";
+  position: absolute;
+
+  inset: 8px;
+  border-radius: 14px;
+
+  border: 1px solid rgba(122,132,80,0.18);
+
+  pointer-events: none;
+}
+
+
+
+@media (max-width: 480px){
+  .details2-form{
+    width: 300px;
+    padding: 12px 12px;
+  }
+
+  .details2-form::after{
+    inset: 4px;
+  }
+}
+
+
+.details2-label{
+  display: block;
+  margin: 0 0 6px 0;
+  font-family: var(--font-serif);
+  font-size: clamp(14px, 3.2vw, 18px);
+  color: #6d7747;
+}
+
+.details2-input{
+  width: 100%;
+  height: 24px;
+  border: 1px solid rgba(122,132,80,0.2);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.85);
+  color: #2b2b2b;
+  padding: 0 10px;
+  font-family: var(--font-serif);
+  font-size: clamp(14px, 3.2vw, 18px);
+  outline: none;
+  margin-bottom: 10px;
+}
+
+/* Fila “Pases” */
+.details2-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2vw, 12px);
+  margin: 6px 0 8px;
+  flex-wrap: wrap;
+}
+
+.details2-pases{
+  font-family: var(--font-script);
+  font-size: clamp(15px, 4vw, 20px);
+  color: #6d7747;
+}
+
+.details2-reservado{
+  font-family: var(--font-script);
+  font-size: clamp(15px, 4vw, 20px);
+  margin-top: 2px;
+  color: #6d7747;
+}
+
+.details2-pill{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(122,132,80,0.15);
+  color: #6d7747;
+  font-family: var(--font-serif);
+  font-size: clamp(12px, 3.2vw, 18px);
+}
+
+
+
+/* GRID PRINCIPAL */
+
+.details2-grid{
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+/* IZQUIERDA */
+.details2-grid .col-left{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 🔥 izquierda */
+  gap: 6px;
+}
+
+.details2-grid .details2-label{
+  text-align: left;
+}
+
+.details2-grid .details2-row-left{
+  display: flex;
+  gap: 6px;
+  justify-content: flex-start;
+}
+
+/* DERECHA */
+.details2-grid .col-right{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start; /* 🔥 arriba */
+}
+
+/* INPUT SOLO DE ESTA ZONA */
+.details2-grid .details2-input{
+  width: 60px;
+}
+
+
+
+/* Botón enviar (cambia a verde al click) */
+.details2-submit{
+  height: 24px;
+  padding: 0 clamp(14px, 3vw, 22px);
+  background: #fff;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.details2-submit-wrap{
+  width: 100%;
+  display: flex;
+  margin-top: 12px;
+  justify-content: center; /* 🔥 CENTRA EL BOTÓN DE VERDAD */
+}
+
+
+.details2-submit:active{
+  background: #7A8450;
+  transform: translateY(1px);
+}
+
+.details2-submit-text{
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: clamp(10px, 3vw, 16px);
+  color: #7A8450;
+}
+
+.details2-submit:active .details2-submit-text{
+  color: #fff;
+}
+
+
+/* =============================
+   ANIMACIONES
+============================= */
+
+.details2-section .animate {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.details2-section .animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* ORDEN EN CASCADA */
+
+.d21.visible { transition-delay: 0.2s; }
+.d22.visible { transition-delay: 0.5s; }
+.d23.visible { transition-delay: 0.8s; }
+
+.d24.visible { transition-delay: 1.1s; }
+.d25.visible { transition-delay: 1.4s; }
+.d26.visible { transition-delay: 1.7s; }
+
+.d27.visible { transition-delay: 2.0s; }
+
+.d28.visible { transition-delay: 2.3s; }
+.d29.visible { transition-delay: 2.6s; }
+.d30.visible { transition-delay: 2.9s; }
+.d31.visible { transition-delay: 3.2s; }
+
+
+/* =========================================================
+   SECCIÓN 6: MENSAJE FINAL
+========================================================= */
+
+
+
+
+
+/* =========================================================
+   INTRO SECCIÓN FINAL (CONSIDERACIONES)
+========================================================= */
+
+.final-intro {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+ max-width: 300px;
+  margin-top: clamp(40px, 15vw, 60px);
+  margin-bottom: clamp(20px, 6vw, 40px);
+}
+
+/* Título */
+.final-intro-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(32px, 6vw, 45px);
+  color: #7A8450;
+
+  margin-bottom: clamp(10px, 3vw, 18px);
+}
+
+/* Texto */
+
+.final-intro-text {
+  font-family: var(--font-serif);
+  font-size: clamp(12px, 3vw, 20px);
+  color: #000000;
+  max-width: 480px;        /* ✅ controla el ancho */
+  width: 100%;
+  margin: 0 auto;          /* ✅ centra de verdad */
+  text-align: center;
+  line-height: 1.6;
+}
+
+
+
+.final-section {
+  width: 100%;
+  background: #ffffff;
+  display: block;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  overflow: hidden; /* 🔥 CLAVE TOTAL */
+  padding-top: 20px; /* espacio para el rasgado */
+
+}
+
+.final-intro,
+.final-torn-wrapper,
+.final-lettering,
+.final-footer-img,
+.final-card {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* =========================
+   1. CAJA MEDIA
+========================= */
+.final-media {
+  width: min(85vw, 360px);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.final-media img,
+.final-media video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* =========================
+   2. LETTERING (MISMO ESTILO)
+========================= */
+.final-lettering {
+  width: clamp(150px, 40vw, 240px);
+  margin-bottom: 10px;
+
+}
+
+.final-lettering img {
+  width: 100%;
+  height: auto;
+}
+
+/* =========================
+   3. CARD MENSAJE (REPLICA DE IMAGEN)
+========================= */
+.final-card {
+  width: min(85vw, 340px);
+  background: white;
+  border-radius: 20px;
+  padding: clamp(16px, 4vw, 22px);
+  text-align: center;
+}
+
+/* corazón */
+.final-heart {
+  font-size: clamp(20px, 7vw, 35px);
+  color: #7A8450;
+   margin-top: 30px;
+}
+
+/* texto principal */
+.final-text {
+  font-family: var(--font-serif);
+  font-size: clamp(11px, 2.5vw, 14px);
+  letter-spacing: 0.15em;
+  color: #2b2b2b;
+  line-height: 1.6;
+}
+
+/* script "compartidas" */
+.final-script {
+  font-family: var(--font-script);
+  font-size: clamp(28px, 6vw, 40px);
+  color: #7A8450;
+  margin: 12px 12px;
+}
+
+/* texto final */
+.final-thanks {
+  font-family: var(--font-serif);
+  font-size: clamp(10px, 2.5vw, 13px);
+  letter-spacing: 0.15em;
+  color: #2b2b2b;
+}
+
+/* =========================
+   4. IMAGEN FULL WIDTH CONTROLADA
+========================= */
+
+.final-footer-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+/* 🔥 CONTROL DE DEFORMACIÓN EN PC */
+@media (min-width: 900px) {
+  .final-footer-img {
+    max-width: 900px; /* evita deformación */
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+
+  }
+}
+
+/* =============================
+   ANIMACION SECCION 6
+============================= */
+
+.final-section .animate {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.final-section .animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* CASCADA */
+.f0.visible { transition-delay: 0.3s; }
+.f1.visible { transition-delay: 0.7s; }
+.f2.visible { transition-delay: 1.1s; }
+.f3.visible { transition-delay: 1.5s; }
+.f4.visible { transition-delay: 1.8s; }
+
+
+/* =========================================================
+   CARRUSEL ENTRE SECCIÓN 2 Y 3
+========================================================= */
+
+.carousel-section {
+  width: 100%;
+  overflow: hidden;
+  background: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  position: relative;
+  z-index: 2;
+  top: -1px;
+  transform: translate3d(0,0,0);
+}
+
+.carousel-track {
+  display: flex;
+  width: max-content;
+  animation: scrollCarousel 24s linear infinite;
+}
+
+.carousel-item {
+  flex: 0 0 auto;
+  width: clamp(160px, 45vw, 280px);
+  margin-right: 3px;
+}
+
+.carousel-wrapper {
+  margin: 0 20px;   /* ✅ espacio izquierda y derecha */
+  overflow: hidden; /* ✅ recorta el carrusel */
+}
+
+.carousel-item img {
+  width: 100%;
+  height: clamp(200px, 55vw, 350px);
+  object-fit: cover;
+  display: block;
+  
+}
+
+/* Animación izquierda infinita */
+@keyframes scrollCarousel {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.letrero-section {
+  transform: translate3d(0,0,0);
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: center; /* ✅ centra la imagen */
+}
+
+.letrero-img {
+  width: 45%;        /* ✅ reduce tamaño */
+  max-width: 300px;  /* ✅ límite en pantallas grandes */
+  height: auto;
+  display: block;
+  margin-bottom: 40px ;
+}
+
+
+
+
+/* =========================================================
+   PAPEL RASGADO - ESCALADO 30% (FIX FINAL)
+========================================================= */
+
+.final-torn-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: -20px 0 10px;;
+}
+
+/* ✅ AHORA MÁS PEQUEÑA (30%) */
+
+.final-torn-img {
+  width: min(70vw, 280px); /* 🔥 antes ~360px → reducido */
+  display: block;
+  z-index: 1;
+  object-fit: cover;
+  height: 340px; /* 🔥 ajusta este valor */
+  object-position: center center;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+/* ===== ARRIBA ===== */
+.final-torn-wrapper::before {
+  content: "";
+  position: absolute;
+  top:0; /* 🔥 ajustado al nuevo tamaño */
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(70vw, 280px); /* ✅ MISMO ANCHO QUE LA FOTO */
+  height: 55px; /* 🔥 reducido */
+  background: url("img/torn-top.png") top center no-repeat;
+  background-size: 100% auto;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ===== ABAJO ===== */
+.final-torn-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: 0; /* 🔥 ajustado */
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(70vw, 280px); /* ✅ MISMO ANCHO */
+  height: 55px;
+  background: url("img/torn-bottom.png") bottom center no-repeat;
+  background-size: 100% auto;
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+.final-torn-wrapper::before,
+.final-torn-wrapper::after {
+  transform: translateX(-50%) scale(1.02);
+}
+
